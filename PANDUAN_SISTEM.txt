@@ -1,0 +1,123 @@
+===========================================================================
+          PANDUAN LENGKAP INSTALASI & OPERASIONAL SISTEM ANTREAN
+===========================================================================
+Versi       : 1.0 (Februari 2026)
+Framework   : Laravel 12 (Stable)
+Database    : SQLite (Portable)
+Real-time   : Laravel Reverb (Websocket)
+Queue       : Database Driver
+Kreator     : Andhika Putra Pratama
+===========================================================================
+
+---------------------------------------------------------------------------
+1. PERSIAPAN AWAL (PREREQUISITES)
+---------------------------------------------------------------------------
+Pastikan lingkungan server/komputer memiliki:
+- PHP v8.2 atau v8.3+ (Sangat disarankan v8.3 untuk Laravel 12)
+- Node.js (LTS) & NPM
+- Composer (Versi terbaru)
+- Ekstensi PHP: sqlite3, gd, intl, mbstring, openssl
+
+---------------------------------------------------------------------------
+2. LANGKAH INSTALASI (LOCAL/DEVELOPMENT)
+---------------------------------------------------------------------------
+Jika Anda baru saja mengunduh proyek dari GitHub:
+
+1. Masuk ke folder proyek, jalankan:
+   > composer install
+   > npm install
+
+2. Konfigurasi Environment:
+   > cp .env.example .env
+   > php artisan key:generate
+
+3. Persiapan Database (SQLite):
+   - Windows (CMD)  : type nul > database/database.sqlite
+   - Linux/Mac      : touch database/database.sqlite
+   - Jalankan Migrasi & Seeder:
+     > php artisan migrate --seed
+
+4. Akses Login Default:
+   - Email    : admin@mail.com (Cek DatabaseSeeder untuk detail)
+   - Password : password
+
+---------------------------------------------------------------------------
+3. CARA MENJALANKAN (DEVELOPMENT MODE)
+---------------------------------------------------------------------------
+Buka 4 terminal berbeda atau gunakan tool manajemen terminal:
+
+Terminal 1 (Web Server)   : php artisan serve
+Terminal 2 (Compiler UI)  : npm run dev
+Terminal 3 (Real-time)    : php artisan reverb:start
+Terminal 4 (Queue Worker) : php artisan queue:work
+
+Akses Aplikasi: http://127.0.0.1:8000
+
+---------------------------------------------------------------------------
+4. LANGKAH DEPLOYMENT (PRODUCTION MODE)
+---------------------------------------------------------------------------
+Saat memindahkan aplikasi ke server asli/vps, lakukan langkah berikut:
+
+1. Konfigurasi .env (Production):
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_URL=https://domain-anda.com
+   REVERB_HOST=domain-anda.com
+   REVERB_SCHEME=https
+
+2. Build Aset (Wajib):
+   > npm run build
+   (Setelah ini, Anda TIDAK PERLU lagi menjalankan 'npm run dev' di server).
+
+3. Optimasi Laravel:
+   > php artisan optimize
+   > php artisan view:cache
+
+4. Setup Supervisor (Linux Server):
+   Agar Reverb dan Queue tetap jalan 24 jam meskipun terminal ditutup,
+   buat config Supervisor untuk perintah:
+   - php artisan reverb:start
+   - php artisan queue:work
+
+5. Izin Folder (Linux):
+   Pastikan folder 'storage' dan 'database' dapat ditulis (writable):
+   > chmod -R 775 storage database
+
+---------------------------------------------------------------------------
+5. FITUR KHUSUS & TROUBLESHOOTING
+---------------------------------------------------------------------------
+
+A. AMBIL ALIH SESI (FORCE CLOSE)
+   - Jika loket "Terkunci" oleh petugas lain, klik kartu loket tersebut.
+   - Konfirmasi pada SweetAlert yang muncul untuk mengambil alih tugas.
+
+B. ERROR "UNEXPECTED TOKEN ENDIF"
+   - Bersihkan cache view dengan perintah:
+     > php artisan view:clear
+
+C. NOMOR ANTREAN TIDAK UPDATE OTOMATIS
+   - Pastikan server 'reverb' sudah berjalan.
+   - Cek apakah browser memblokir koneksi websocket (gunakan HTTPS).
+
+D. BACKUP DATA
+   - Cukup salin file 'database/database.sqlite' secara rutin.
+
+---------------------------------------------------------------------------
+6. LISENSI & HAK CIPTA
+---------------------------------------------------------------------------
+Aplikasi ini dilindungi oleh Hak Cipta dan Lisensi Penggunaan:
+1. Dilarang mendistribusikan ulang kode sumber tanpa izin tertulis.
+2. Penggunaan hanya diperbolehkan untuk instansi/lokasi yang terdaftar.
+3. Modifikasi kode diperbolehkan selama tidak menghapus kredit kreator.
+
+---------------------------------------------------------------------------
+7. KONTAK DUKUNGAN TEKNIS
+---------------------------------------------------------------------------
+Developer : Andhika Putra Pratama
+Tech Stack: Laravel 12, Livewire 3, Flux UI, Laravel Reverb, SQLite
+Email     : andhika6@gmail.com
+WhatsApp  : +62 857-3515-5936
+
+===========================================================================
+                 Dibuat untuk Efisiensi & Kemudahan Akses
+===========================================================================
