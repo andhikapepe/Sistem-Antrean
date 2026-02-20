@@ -5,6 +5,7 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+@source "../../vendor/masmerise/livewire-toaster/resources/views/*.blade.php";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -48,7 +49,7 @@
 }
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+    @apply gap-2 grid;
 }
 
 [data-flux-label] {
