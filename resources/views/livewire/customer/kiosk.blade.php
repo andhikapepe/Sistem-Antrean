@@ -61,7 +61,10 @@
     </div>
 
     {{-- 4. TOMBOL TEST PRINT --}}
-    <div class="print:hidden z-10 mt-20">
+    <div class="print:hidden z-10 mt-20 text-center">
+        <div id="kiosk-clock" class="mb-2 font-medium text-[14px] text-zinc-400 uppercase tracking-[0.3em]">
+            {{ now()->translatedFormat('l, d F Y | H:i:s') }}
+        </div>
         <button onclick="testPrint()"
             class="px-6 py-2 border border-zinc-800 hover:border-zinc-600 rounded-full text-[10px] text-zinc-600 uppercase tracking-widest transition-all">
             Test Print Mesin
@@ -73,6 +76,27 @@
 
     {{-- 6. SCRIPTS LOGIC --}}
     <script>
+        function updateKioskTime() {
+            const clockElement = document.getElementById('kiosk-clock');
+            if (clockElement) {
+                const now = new Date();
+                const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                };
+                // Format Indonesia
+                clockElement.innerText = now.toLocaleDateString('id-ID', options).replace(/\./g, ':');
+            }
+        }
+
+        // Jalankan jam setiap detik
+        setInterval(updateKioskTime, 1000);
+
         // Fungsi Utama Print
         function executePrint(ticket, category, date) {
             const frame = document.getElementById('printFrame');
