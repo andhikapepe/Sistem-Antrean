@@ -63,7 +63,7 @@ class Kiosk extends Component
                 'category' => $queue->category->name
             ]);
 
-            Toaster::success("Antrean " . $queue->ticket_number . " berhasil diambil.");
+            //Toaster::success("Antrean " . $queue->ticket_number . " berhasil diambil.");
         } catch (\Exception $e) {
             Log::error("Kiosk Error: " . $e->getMessage());
             Toaster::error("Gagal mengambil antrean.");
@@ -324,7 +324,6 @@ class Kiosk extends Component
             $printer->feed();
 
             // 3. KATEGORI DENGAN BORDER OUTLINE
-            $printer->feed();
             $label = " " . $data['category'] . " ";
             $len = strlen($label);
             $printer->text("+" . str_repeat("-", $len) . "+\n");

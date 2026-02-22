@@ -22,5 +22,5 @@ yarn-error.log
 /.vscode
 /.zed
 # SQLite Database
-#/database/*.sqlite
-#/database/*.sqlite-journal
+/database/*.sqlite
+/database/*.sqlite-journal
