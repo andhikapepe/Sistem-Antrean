@@ -32,14 +32,15 @@ Jika Anda baru saja mengunduh proyek dari GitHub:
    > php artisan key:generate
 
 3. Persiapan Database (SQLite):
-   - Windows (CMD)  : type nul > database/database.sqlite
-   - Linux/Mac      : touch database/database.sqlite
+   - Buka terminal di folder proyek, lalu buat file database:
+     Windows (CMD)  : type nul > database/database.sqlite
+     Linux/Mac      : touch database/database.sqlite
+
+   - Catatan: Jika gagal, cukup buat file baru secara manual di folder
+     'database' dengan nama 'database.sqlite'.
+
    - Jalankan Migrasi & Seeder:
      > php artisan migrate --seed
-
-4. Akses Login Default:
-   - Email    : admin@mail.com (Cek DatabaseSeeder untuk detail)
-   - Password : password
 
 ---------------------------------------------------------------------------
 3. CARA MENJALANKAN (DEVELOPMENT MODE)
@@ -103,7 +104,61 @@ D. BACKUP DATA
    - Cukup salin file 'database/database.sqlite' secara rutin.
 
 ---------------------------------------------------------------------------
-6. LISENSI & HAK CIPTA
+6. AKSES SISTEM & AUTENTIKASI
+---------------------------------------------------------------------------
+Untuk masuk ke Dashboard Admin/Manajemen, akses URL berikut:
+
+URL Login : http://127.0.0.1:8000/login
+Role      : admin / customer_service
+
+Kredensial Default (Development) untuk admin:
+- Email    : admin@mail.com
+- Password : password123
+
+Kredensial Default (Development) untuk customer_service:
+- Email    : customer_service@mail.com
+- Password : password123
+
+Catatan Keamanan:
+1. Segera ubah password default melalui menu 'Profil' setelah instalasi.
+2. Sesi login akan tetap aktif selama 'session_lifetime' yang diatur di .env.
+3. Jika lupa password, gunakan perintah artisan:
+   > php artisan db:seed --class=UserSeeder (Untuk reset ke default)
+
+---------------------------------------------------------------------------
+7. KONFIGURASI PRINTER THERMAL (DIRECT PRINTING)
+---------------------------------------------------------------------------
+Sistem menggunakan komunikasi langsung (ESC/POS). Ikuti langkah sesuai
+tipe koneksi yang digunakan:
+
+A. PRINTER USB (WINDOWS SHARING) - Paling Umum
+   1. Buka 'Control Panel' > 'Devices and Printers'.
+   2. Klik kanan pada printer Anda > 'Printer Properties' > Tab 'Sharing'.
+   3. Centang 'Share this printer' dan beri nama singkat (Contoh: POS58).
+   4. Di Aplikasi (Menu Printer):
+      - Tipe    : Windows
+      - Alamat  : POS58 (Atau //localhost/POS58)
+   5. Khusus Server Terpisah: Jika printer di komputer lain, gunakan IP:
+      Contoh: //192.168.1.50/POS58
+
+B. PRINTER LAN/WIFI (NETWORK)
+   1. Pastikan printer memiliki IP statis satu segmen dengan server.
+   2. Pastikan Port 9100 tidak diblokir oleh Firewall.
+   3. Di Aplikasi (Menu Printer):
+      - Tipe    : Network
+      - Alamat  : 192.168.1.100 (Sesuaikan IP Printer)
+      - Port    : 9100
+
+C. PENGATURAN LOGO & STRUK
+   - Logo otomatis diambil dari 'Pengaturan Aplikasi' (app_logo).
+   - Pilih lebar kertas (58mm/80mm) di menu manajemen printer untuk
+     menghindari teks terpotong.
+
+D. TROUBLESHOOTING PRINTER
+   - Text Berantakan: Pastikan tipe printer mendukung perintah ESC/POS.
+
+---------------------------------------------------------------------------
+8. LISENSI & HAK CIPTA
 ---------------------------------------------------------------------------
 Aplikasi ini dilindungi oleh Hak Cipta dan Lisensi Penggunaan:
 1. Dilarang mendistribusikan ulang kode sumber tanpa izin tertulis.
@@ -111,7 +166,7 @@ Aplikasi ini dilindungi oleh Hak Cipta dan Lisensi Penggunaan:
 3. Modifikasi kode diperbolehkan selama tidak menghapus kredit kreator.
 
 ---------------------------------------------------------------------------
-7. KONTAK DUKUNGAN TEKNIS
+9. KONTAK DUKUNGAN TEKNIS
 ---------------------------------------------------------------------------
 Developer : Andhika Putra Pratama
 Tech Stack: Laravel 12, Livewire 3, Flux UI, Laravel Reverb, SQLite

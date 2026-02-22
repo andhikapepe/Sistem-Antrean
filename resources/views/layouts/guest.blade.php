@@ -84,6 +84,8 @@
 </head>
 
 <body class="bg-zinc-950 h-full font-sans text-white antialiased">
+    <x-toaster-hub />
+
     {{ $slot }}
 
     @livewireScripts

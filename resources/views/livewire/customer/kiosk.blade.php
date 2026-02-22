@@ -1,122 +1,121 @@
 <div class="relative flex flex-col justify-center items-center bg-zinc-950 p-6 min-h-screen overflow-hidden">
-    {{-- 1. EFEK VISUAL BACKGROUND --}}
-    <div class="print:hidden top-0 left-1/2 absolute bg-indigo-600/20 blur-[120px] rounded-full w-full h-96 -translate-x-1/2 pointer-events-none"></div>
 
-    {{-- 2. HEADER KIOSK DENGAN LOGO DARI APP SETTINGS --}}
-    <div class="print:hidden z-10 mb-12 text-center">
+    {{-- Glow Effect --}}
+    <div
+        class="top-0 left-1/2 absolute bg-indigo-600/20 blur-[120px] rounded-full w-full h-96 -translate-x-1/2 pointer-events-none">
+    </div>
+
+    {{-- Branding Section --}}
+    <div class="z-10 mb-12 text-center">
         <div class="flex justify-center mb-6">
-            <div class="bg-white/5 shadow-2xl backdrop-blur-xl p-4 border border-white/10 rounded-3xl hover:rotate-3 transition-transform duration-500">
+            <div class="bg-white/5 shadow-2xl backdrop-blur-xl p-4 border border-white/10 rounded-3xl">
                 @if (!empty($appSettings['app_logo']))
-                    <img src="{{ asset('storage/' . $appSettings['app_logo']) }}"
-                         alt="{{ $appSettings['app_name'] ?? 'Logo' }}"
-                         class="w-24 h-24 object-contain">
+                    <img src="{{ asset('storage/' . $appSettings['app_logo']) }}" class="w-24 h-24 object-contain">
                 @else
-                    {{-- Fallback jika logo kosong: Gunakan Icon --}}
                     <flux:icon.ticket class="w-20 h-20 text-indigo-500" />
                 @endif
             </div>
         </div>
 
         <h1 class="font-black text-white text-5xl uppercase tracking-tight">
-            {{ $appSettings['app_name'] ?? config('app.name') }}
+            {{ $appSettings['app_name'] ?? 'SMART QUEUE' }}
         </h1>
-
-        <div class="flex justify-center items-center gap-3 mt-4">
-            <span class="bg-indigo-500 w-8 h-[1px]"></span>
-            <p class="font-medium text-zinc-400 text-xl uppercase tracking-widest">
-                {{ $appSettings['app_slogan'] ?? 'Pusat Layanan Terpadu' }}
-            </p>
-            <span class="bg-indigo-500 w-8 h-[1px]"></span>
-        </div>
+        <p class="mt-4 font-medium text-zinc-400 text-xl uppercase tracking-widest">
+            {{ $appSettings['app_slogan'] ?? 'Silakan Ambil Antrean Anda' }}
+        </p>
     </div>
 
-    {{-- 3. GRID TOMBOL KATEGORI --}}
-    <div class="print:hidden z-10 gap-8 grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl">
+    {{-- Categories Grid --}}
+    <div class="z-10 gap-8 grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl">
         @foreach ($categories as $category)
-            <button
-                wire:click="takeQueue({{ $category->id }})"
-                wire:loading.attr="disabled"
-                class="group relative bg-zinc-900 shadow-2xl p-12 border border-zinc-800 hover:border-indigo-500 rounded-[2.5rem] overflow-hidden text-left hover:scale-[1.02] active:scale-95 transition-all duration-300"
-            >
-                {{-- Watermark Prefix --}}
-                <span class="-top-4 -right-4 absolute font-black text-[120px] text-white/[0.03] group-hover:text-indigo-500/10 uppercase transition-colors pointer-events-none">
+            <button wire:click="takeQueue({{ $category->id }})" wire:loading.attr="disabled"
+                class="group relative bg-zinc-900 disabled:opacity-50 shadow-2xl p-10 border border-zinc-800 hover:border-indigo-500 rounded-[2.5rem] overflow-hidden text-left hover:scale-[1.02] active:scale-95 transition-all duration-300">
+
+                <span
+                    class="-top-4 -right-4 absolute font-black text-[120px] text-white/[0.03] group-hover:text-indigo-500/10 uppercase pointer-events-none">
                     {{ $category->prefix }}
                 </span>
 
-                <div class="z-10 relative flex items-center gap-8">
-                    <div class="flex justify-center items-center bg-indigo-500/10 group-hover:bg-indigo-500 rounded-2xl w-20 h-20 transition-colors duration-300">
-                        <flux:icon.users class="w-10 h-10 text-indigo-500 group-hover:text-white" />
+                <div class="z-10 relative flex items-center gap-6">
+                    <div
+                        class="flex justify-center items-center bg-indigo-500/10 group-hover:bg-indigo-500 rounded-2xl w-20 h-20 transition-all">
+                        <div wire:loading wire:target="takeQueue({{ $category->id }})" class="absolute">
+                            <flux:icon.arrow-path class="w-10 h-10 text-white animate-spin" />
+                        </div>
+                        <div wire:loading.remove wire:target="takeQueue({{ $category->id }})">
+                            <flux:icon.users class="w-10 h-10 text-indigo-500 group-hover:text-white" />
+                        </div>
                     </div>
-
                     <div>
                         <h2 class="font-bold text-white group-hover:text-indigo-400 text-3xl transition-colors">
                             {{ $category->name }}
                         </h2>
-                        <p class="mt-1 font-bold text-zinc-500 text-sm uppercase tracking-widest">Tekan untuk ambil antrean</p>
+                        <p class="mt-1 font-bold text-zinc-500 text-xs uppercase tracking-widest">Sentuh untuk mencetak
+                            tiket</p>
                     </div>
-                </div>
-
-                {{-- Loading Spinner Overlay --}}
-                <div wire:loading wire:target="takeQueue({{ $category->id }})" class="z-20 absolute inset-0 flex flex-col justify-center items-center bg-zinc-900/90 backdrop-blur-md">
-                    <div class="mb-4 border-4 border-indigo-500 border-t-transparent rounded-full w-12 h-12 animate-spin"></div>
-                    <p class="font-bold text-white animate-pulse">SEDANG MENCETAK...</p>
                 </div>
             </button>
         @endforeach
     </div>
 
-    {{-- 4. AREA STRUK (Tetap minimalis untuk printer thermal) --}}
-    <div id="print-area" class="hidden print:block p-0 w-full font-mono text-black text-center">
-        <div class="mb-4 pb-2 border-black border-b">
-            <h1 class="font-bold text-lg uppercase">{{ $appSettings['app_name'] ?? config('app.name') }}</h1>
-            <p class="text-[10px]">{{ now()->translatedFormat('l, d F Y | H:i') }}</p>
+    {{-- Footer & Utilities --}}
+    <div class="z-10 mt-16 text-center">
+        <div id="kiosk-clock" class="mb-6 font-mono text-zinc-500 text-xl tracking-widest">
+            {{ now()->translatedFormat('l, d F Y | H:i:s') }}
         </div>
 
-        <p class="text-xs uppercase">Nomor Antrean</p>
-        <div class="my-2 font-black text-[60px] leading-none" id="print-ticket-number">---</div>
-
-        <div class="my-2 py-1 border-black border-y font-bold uppercase">
-            <span id="print-category-name">---</span>
-        </div>
-
-        <div class="mt-4 text-[9px]">
-            <p>Silakan tunggu panggilan nomor Anda.</p>
-            <p class="mt-2 font-bold italic">Terima Kasih</p>
-        </div>
+        <button wire:click="testPrintDirect" wire:loading.attr="disabled"
+            class="flex items-center gap-2 mx-auto px-6 py-2 border border-zinc-800 hover:border-indigo-500 rounded-full text-[10px] text-zinc-600 hover:text-indigo-400 uppercase tracking-widest transition-all">
+            <div wire:loading wire:target="testPrintDirect">
+                <flux:icon.arrow-path class="w-3 h-3 animate-spin" />
+            </div>
+            <span wire:loading.remove wire:target="testPrintDirect">Test Print Mesin</span>
+            <span wire:loading wire:target="testPrintDirect">Sedang Mencoba...</span>
+        </button>
     </div>
-
-    {{-- 5. FOOTER --}}
-    <div class="print:hidden z-10 mt-20 font-medium text-[10px] text-zinc-600 uppercase tracking-[0.3em]">
-        {{ now()->translatedFormat('l, d F Y') }}
-    </div>
-
-    {{-- 6. SCRIPT CETAK --}}
-    <script>
-        window.addEventListener('ticket-created', event => {
-            const data = event.detail[0];
-
-            document.getElementById('print-ticket-number').innerText = data.ticket;
-            document.getElementById('print-category-name').innerText = data.category;
-
-            setTimeout(() => {
-                window.print();
-            }, 300);
-        });
-    </script>
-
-    <style>
-        @media print {
-            body { background: white !important; }
-            .print\:hidden { display: none !important; }
-            .print\:block { display: block !important; }
-            @page { margin: 0; size: auto; }
-        }
-        ::-webkit-scrollbar { display: none; }
-        html, body {
-            overflow: hidden;
-            height: 100%;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-    </style>
 </div>
+
+@script
+<script>
+    // Update Jam Real-time
+    setInterval(() => {
+        const clock = document.getElementById('kiosk-clock');
+        if (clock) {
+            clock.innerText = new Date().toLocaleString('id-ID', {
+                weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).replace(/\./g, ':');
+        }
+    }, 1000);
+
+    // Handler Tiket Berhasil (Antrean)
+    $wire.on('ticket-created', (event) => {
+        // Pada Livewire 3, event biasanya adalah array [data]
+        const data = Array.isArray(event) ? event[0] : event;
+
+        Swal.fire({
+            title: 'TIKET DICETAK',
+            html: `<div class="font-bold text-indigo-500 text-2xl">${data.ticket}</div><div class="text-sm">Kategori: ${data.category}</div>`,
+            icon: 'success',
+            timer: 3500,
+            showConfirmButton: false,
+            background: '#121214',
+            color: '#fff',
+            customClass: { popup: 'rounded-[2rem] border border-zinc-800' }
+        });
+    });
+
+    // Handler Jika Printer Error (Kabel lepas / IP salah)
+    $wire.on('printer-error', (event) => {
+        const data = Array.isArray(event) ? event[0] : event;
+        Swal.fire({
+            title: 'PRINTER OFFLINE',
+            text: data.message || 'Gagal terhubung ke mesin printer.',
+            icon: 'error',
+            background: '#121214',
+            color: '#fff',
+            confirmButtonColor: '#6366f1'
+        });
+    });
+</script>
+@endscript

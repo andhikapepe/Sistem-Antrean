@@ -64,6 +64,11 @@
                             :current="request()->routeIs('mapping')" wire:navigate>
                             {{ __('Pemetaan Antrean') }}
                         </flux:sidebar.item>
+
+                        <flux:sidebar.item icon="printer" :href="route('printers')"
+                            :current="request()->routeIs('printers')" wire:navigate>
+                            {{ __('Pengaturan Printer') }}
+                        </flux:sidebar.item>
                     </flux:sidebar.group>
                 @endrole
             </flux:sidebar.group>

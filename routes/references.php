@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Admin\AccountManager;
+use App\Livewire\Admin\PrinterManager;
 use App\Livewire\Admin\QueueCategoryManager;
 use App\Livewire\Admin\QueueMapping;
 use App\Livewire\Admin\RoleManager;
@@ -15,4 +16,5 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('reference')->grou
     Route::get('/service-unit', ServiceUnitManager::class)->name('units');
     Route::get('/categories', QueueCategoryManager::class)->name('categories');
     Route::get('/mapping', QueueMapping::class)->name('mapping');
+    Route::get('/printers', PrinterManager::class)->name('printers');
 });

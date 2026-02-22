@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $appSettings['app_name'] ?? config('app.name') }}</title>
+    <title>{{ $appSettings['app_name'] ?? config('app.name', 'Laravel Starter Kit') }}</title>
 
     <meta name="description" content="{{ $appSettings['meta_description'] ?? '' }}">
     <meta name="keywords" content="{{ $appSettings['meta_keywords'] ?? '' }}">
